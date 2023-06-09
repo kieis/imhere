@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  Alert,
 } from "react-native";
 import styles from "./styles";
 import { Participant } from "../../components/Participant";
@@ -24,13 +25,11 @@ export default function Home({}) {
     const participantExist = isParticipantAlreadyAdded(participantName);
 
     if (participantName.trim().length <= 0) {
-      console.log("Enter a valid name");
-      return;
+      return Alert.alert("Invalid name", "Enter a valid name");
     }
 
     if (participantExist) {
-      console.log("Participant already added");
-      return;
+      return Alert.alert("Can't add", "Participant already added");
     }
 
     setParticipants([...participants, participantName]);
@@ -38,16 +37,26 @@ export default function Home({}) {
   }
 
   function handleParticipantRemove(name: string): void {
-    const participantExist = isParticipantAlreadyAdded(name);
-    if (!participantExist) {
-      console.log("Participant not exists");
-      return;
-    }
+    Alert.alert("Remove", `Are you sure you want to remove ${name}?`, [
+      {
+        text: "Yes",
+        onPress: () => {
+          const participantExist = isParticipantAlreadyAdded(name);
+          if (!participantExist) {
+            return Alert.alert("Can't remove", "Participant not exists");
+          }
 
-    const updatedParticipants = participants.filter(
-      (participant) => participant !== name
-    );
-    setParticipants(updatedParticipants);
+          const updatedParticipants = participants.filter(
+            (participant) => participant !== name
+          );
+          setParticipants(updatedParticipants);
+        },
+      },
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+    ]);
   }
 
   return (
