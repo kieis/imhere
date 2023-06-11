@@ -1,15 +1,14 @@
 import { useState } from "react";
 import {
+  Alert,
+  FlatList,
   Text,
   TextInput,
-  View,
   TouchableOpacity,
-  ScrollView,
-  FlatList,
-  Alert,
+  View,
 } from "react-native";
-import styles from "./styles";
 import { Participant } from "../../components/Participant";
+import styles from "./styles";
 
 export default function Home({}) {
   const [participantName, setParticipantName] = useState("");
@@ -32,7 +31,7 @@ export default function Home({}) {
       return Alert.alert("Can't add", "Participant already added");
     }
 
-    setParticipants([...participants, participantName]);
+    setParticipants((prevState) => [...prevState, participantName]);
     setParticipantName("");
   }
 
@@ -46,10 +45,9 @@ export default function Home({}) {
             return Alert.alert("Can't remove", "Participant not exists");
           }
 
-          const updatedParticipants = participants.filter(
-            (participant) => participant !== name
+          setParticipants((prevState) =>
+            prevState.filter((participant) => participant !== name)
           );
-          setParticipants(updatedParticipants);
         },
       },
       {
